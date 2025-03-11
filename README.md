@@ -21,7 +21,7 @@ Git
 Quick Start
 -------------
 # Clone the repository
-git clone https://github.com/yourusername/your-repo-name.git
+git clone https://github.com/Ahmed-tantawy/Automation.git
 cd your-repo-name
 
 # Install dependencies
