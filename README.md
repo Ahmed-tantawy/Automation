@@ -29,11 +29,10 @@ pip install -r requirements.txt
 
 # Configure Elasticsearch connection
 cp config/elasticsearch.example.yml config/elasticsearch.yml
-# Edit the file with your Elasticsearch details
+
 
 # Configure ElastAlert rules
 cp config/elastalert.example.yml config/elastalert.yml
-# Edit the file with your desired alert configurations
 
 # Run the setup script
 python setup.py
