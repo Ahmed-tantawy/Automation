@@ -1,0 +1,78 @@
+---
+name: jenkins_executor_drop_detection.yaml
+type: monitor
+enabled: true
+schedule:
+  interval: 30m
+inputs:
+  - search:
+      request:
+        indices: [traces-apm*, apm-*, logs-apm*, metrics-apm*]
+        body:
+          query:
+            bool:
+              filter:
+                - match_phrase:
+                    service.name: jenkins
+                - match_phrase:
+                    labels.label: pool
+                - match_phrase:
+                    processor.event: metric
+                - range:
+                    "@timestamp":
+                      gte: now-25h
+                      lte: now
+          aggs:
+            baseline_period:
+              filter:
+                range:
+                  "@timestamp":
+                    gte: now-25h
+                    lt: now-1h
+              aggs:
+                avg_executors:
+                  avg:
+                    field: jenkins.executor.online
+            current_period:
+              filter:
+                range:
+                  "@timestamp":
+                    gte: now-1h
+                    lte: now
+              aggs:
+                avg_executors:
+                  avg:
+                    field: jenkins.executor.online
+          size: 0
+triggers:
+  - name: Significant Executor Drop Detected
+    severity: 2
+    condition:
+      script:
+        source: |
+          def baseline = ctx.results[0].aggregations.baseline_period.avg_executors.value;
+          def current = ctx.results[0].aggregations.current_period.avg_executors.value;
+          def threshold = 20;
+          def percentDrop = baseline > 0 ? ((baseline - current) / baseline * 100) : 0;
+          ctx.vars.baseline = baseline;
+          ctx.vars.current = current;
+          ctx.vars.percentDrop = percentDrop;
+          return percentDrop > threshold;
+        lang: painless
+    actions:
+      - name: Run Local Script
+        action_type: command
+        params:
+          command: powershell
+          path: ":\\alert2\\rules\\send_google_chat_alert.ps1"
+          arguments:
+            - "-Baseline"
+            - "{{ctx.vars.baseline}}"
+            - "-Current"
+            - "{{ctx.vars.current}}"
+            - "-PercentDrop"
+            - "{{ctx.vars.percentDrop}}"
+throttle:
+  value: 1
+  unit: HOURS
+input_type: search
