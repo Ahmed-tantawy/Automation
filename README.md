@@ -19,7 +19,8 @@ ElastAlert 2.x
 Git
 
 Quick Start
-bashCopy# Clone the repository
+-------------
+# Clone the repository
 git clone https://github.com/yourusername/your-repo-name.git
 cd your-repo-name
 
@@ -36,6 +37,8 @@ cp config/elastalert.example.yml config/elastalert.yml
 
 # Run the setup script
 python setup.py
+
+-------------
 Pipeline Configuration
 This repository includes configuration files for setting up CI/CD pipelines on popular platforms:
 
