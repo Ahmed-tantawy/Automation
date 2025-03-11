@@ -1,0 +1,22 @@
+# Minimal Windows Update Check Script
+#----------------------------------
+# How to Use It
+#Enable WinRM on the remote computer 
+winrm quickconfig
+Enable-PSRemoting -Force
+#check if the service started
+Get-Service WinRM
+# Save the script as checking_pending_windows_updates.ps1 in your Automation folder
+# Run it with one of these commands:
+
+# powershellCopy# For a single remote computer
+# .\checking_pending_windows_updates.ps1 -ComputerNames "pc1"
+
+# # For multiple computers
+# .\checking_pending_windows_updates.ps1 -ComputerNames "PC1","PC2","PC3"
+
+# # For a list of computers from a file
+# $computers = Get-Content "C:\path\to\computers.txt"
+# .\checking_pending_windows_updates.ps1 -ComputerNames $computers
+
+#-----------------------------------
