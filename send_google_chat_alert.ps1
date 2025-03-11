@@ -15,7 +15,7 @@ $CurrentFormatted = [math]::Round($Current, 2)
 $PercentDropFormatted = [math]::Round($PercentDrop, 2)
 
 # Google Chat webhook URL - replace with your actual webhook URL
-$WebhookUrl = "https://chat.googleapis.com"
+$WebhookUrl = "https://chat.google.com"
 
 # Current timestamp
 $Timestamp = Get-Date -Format "yyyy-MM-dd HH:mm:ss"
